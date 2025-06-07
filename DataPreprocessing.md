@@ -14,11 +14,11 @@
 
 1. **Type Casting (Data Type Conversion)**
 2. **Duplicate Handling**
-3. **Outlier Treatment**
-4. **Zero Variance and Near-Zero Variance Detection**
-5. **Encoding (Categorical Variable Transformation)**
-6. **Discretization (Binning)**
-7. **Missing Value Treatment (Imputation)**
+3. **Missing Value Treatment (Imputation)**
+4. **Outlier Treatment**
+5. **Zero Variance and Near-Zero Variance Detection**
+6. **Encoding (Categorical Variable Transformation)**
+7. **Discretization (Binning)**
 8. **Transformation (Normalization of Distribution)**
 9. **Scaling (Feature Scaling/Rescaling)**
 
