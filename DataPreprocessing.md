@@ -366,11 +366,11 @@
 
 - **Type Casting:** Prevents algorithm errors, speeds up computations.
 - **Duplicate Handling:** Removes bias and speeds up analysis.
+- **Missing Value Treatment:** Keeps as much data as possible, avoids dropped samples, maintains patterns.
 - **Outlier Treatment:** Prevents extreme values from skewing predictions; especially critical for regression, clustering.
 - **Zero Variance:** Removes useless features, faster model fitting.
 - **Encoding:** Converts text categories to usable numbers; enables all ML models.
 - **Discretization:** Helps with tree-based models, reveals group effects, good for segmentation.
-- **Missing Value Treatment:** Keeps as much data as possible, avoids dropped samples, maintains patterns.
 - **Transformation:** Makes data fit model assumptions (improves accuracy).
 - **Scaling:** Ensures fair contribution from all features; critical for kNN, SVM, PCA, neural networks.
 
