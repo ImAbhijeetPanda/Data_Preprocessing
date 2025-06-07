@@ -10,6 +10,18 @@
 
 ## Key Steps of Data Preprocessing
 
+#### **Main Types of Data Preprocessing**
+
+1. **Type Casting (Data Type Conversion)**
+2. **Duplicate Handling**
+3. **Outlier Treatment**
+4. **Zero Variance and Near-Zero Variance Detection**
+5. **Encoding (Categorical Variable Transformation)**
+6. **Discretization (Binning)**
+7. **Missing Value Treatment (Imputation)**
+8. **Transformation (Normalization of Distribution)**
+9. **Scaling (Feature Scaling/Rescaling)**
+
 ---
 
 ### 1. Type Casting (Data Type Conversion)
@@ -48,7 +60,44 @@
 
 ---
 
-### 3. Outlier Treatment
+### 3. Missing Value Treatment
+
+- **What:** Deal with empty (NaN, None) values in data.
+- **Why:** Models can’t train with missing values.
+- **Types of Missingness:**
+  - **MCAR:** Completely random
+  - **MAR:** Related to other observed variables
+  - **MNAR:** Not at random
+- **Techniques:**
+  - **Deletion:** Remove missing rows/columns (if few).
+    ```python
+    df = df.dropna()
+    ```
+  - **Imputation:** Fill with mean, median, mode, constant, random sample.
+    ```python
+    from sklearn.impute import SimpleImputer
+    # Numeric columns
+    df['Salaries'] = SimpleImputer(strategy='median').fit_transform(df[['Salaries']])
+    # Categorical columns
+    df['Gender'] = SimpleImputer(strategy='most_frequent').fit_transform(df[['Gender']])
+    # Constant fill
+    df['City'] = SimpleImputer(strategy='constant', fill_value='Unknown').fit_transform(df[['City']])
+    ```
+  - **Advanced:** Predictive (KNN, regression), random, or library tools like AutoClean.
+
+| Method           | When to Use                     | Pros                   | Cons               |
+| ---------------- | ------------------------------- | ---------------------- | ------------------ |
+| Deletion         | Small % missing, not important  | Simple, fast           | Wastes data        |
+| Mean/Median/Mode | Numeric/categorical, random     | Easy, preserves size   | Can add bias       |
+| Constant/Random  | Flags special value/keeps dist. | Handles edge cases     | Not always logical |
+| Advanced ML      | Not at random, large missing    | Best preserves pattern | Complex, slow      |
+
+- **How to identify (Plot):** Use **heatmap** (`sns.heatmap(df.isnull())`) to visualize missingness, or barplot of missing value counts per column.
+- **Scenario:** Mean/median for numeric, mode for category, ML for large/mixed missingness.
+
+---
+
+### 4. Outlier Treatment
 
 - **What:** Handling extreme values far from most data.
 - **Why:** Outliers can skew results and mislead models.
@@ -61,12 +110,12 @@
   - **Winsorization:** Capping outliers at percentile or statistical limit.
   - **Rectify/Retain:** Only if valid or important outliers.
 
-| Method        | When to Use                            | Python Example                                         | Formula (if any) | Real-World Impact                 |
-| ------------- | -------------------------------------- | ------------------------------------------------------ | ---------------- | --------------------------------- |
+| Method        | When to Use                            | Python Example                                           | Formula (if any) | Real-World Impact                 |
+| ------------- | -------------------------------------- | -------------------------------------------------------- | ---------------- | --------------------------------- |
 | Remove        | Outlier is error/typo, not real        | `df = df[(df['col'] >= lower) & (df['col'] <= upper)]` | N/A              | Cleaner statistics, robust models |
-| Replace (Cap) | Outlier is real, but effect limited    | see Winsorization                                      | see below        | Avoids bias from outliers         |
-| Winsorization | Keep all rows, limit outlier influence | see below                                              | see below        | Preserves dataset size            |
-| Retain        | Outlier is valid and important         | N/A                                                    | N/A              | Detects rare, important cases     |
+| Replace (Cap) | Outlier is real, but effect limited    | see Winsorization                                        | see below        | Avoids bias from outliers         |
+| Winsorization | Keep all rows, limit outlier influence | see below                                                | see below        | Preserves dataset size            |
+| Retain        | Outlier is valid and important         | N/A                                                      | N/A              | Detects rare, important cases     |
 
 - **Formulas:**
   - **IQR Method:**
@@ -97,7 +146,7 @@
 
 ---
 
-### 4. Zero Variance & Near-Zero Variance
+### 5. Zero Variance & Near-Zero Variance
 
 - **What:** Columns with all values the same (or nearly so).
 - **Why:** These features carry no predictive power and slow modeling.
@@ -111,7 +160,7 @@
 
 ---
 
-### 5. Encoding Categorical Variables
+### 6. Encoding Categorical Variables
 
 - **What:** Convert non-numeric (categorical) data to numbers for ML.
 - **Why:** Most algorithms require numerical input.
@@ -151,7 +200,7 @@
 
 ---
 
-### 6. Discretization (Binning)
+### 7. Discretization (Binning)
 
 - **What:** Convert continuous variable to discrete bins/categories.
 - **Why:** Can improve model stability, reveal hidden patterns, simplify interpretation.
@@ -180,43 +229,6 @@
 
 ---
 
-### 7. Missing Value Treatment
-
-- **What:** Deal with empty (NaN, None) values in data.
-- **Why:** Models can’t train with missing values.
-- **Types of Missingness:**
-  - **MCAR:** Completely random
-  - **MAR:** Related to other observed variables
-  - **MNAR:** Not at random
-- **Techniques:**
-  - **Deletion:** Remove missing rows/columns (if few).
-    ```python
-    df = df.dropna()
-    ```
-  - **Imputation:** Fill with mean, median, mode, constant, random sample.
-    ```python
-    from sklearn.impute import SimpleImputer
-    # Numeric columns
-    df['Salaries'] = SimpleImputer(strategy='median').fit_transform(df[['Salaries']])
-    # Categorical columns
-    df['Gender'] = SimpleImputer(strategy='most_frequent').fit_transform(df[['Gender']])
-    # Constant fill
-    df['City'] = SimpleImputer(strategy='constant', fill_value='Unknown').fit_transform(df[['City']])
-    ```
-  - **Advanced:** Predictive (KNN, regression), random, or library tools like AutoClean.
-
-| Method           | When to Use                     | Pros                   | Cons               |
-| ---------------- | ------------------------------- | ---------------------- | ------------------ |
-| Deletion         | Small % missing, not important  | Simple, fast           | Wastes data        |
-| Mean/Median/Mode | Numeric/categorical, random     | Easy, preserves size   | Can add bias       |
-| Constant/Random  | Flags special value/keeps dist. | Handles edge cases     | Not always logical |
-| Advanced ML      | Not at random, large missing    | Best preserves pattern | Complex, slow      |
-
-- **How to identify (Plot):** Use **heatmap** (`sns.heatmap(df.isnull())`) to visualize missingness, or barplot of missing value counts per column.
-- **Scenario:** Mean/median for numeric, mode for category, ML for large/mixed missingness.
-
----
-
 ### 8. Transformation
 
 - **What:** Change data distribution for normalization or variance stabilization.
@@ -234,7 +246,6 @@
       df['LogSalary'] = np.log1p(df['Salaries'])
       ```
     - **How to identify (Plot):** **Histogram** or **QQ-plot** before and after transformation to check normality.
-
   - **Power Transformation:**
 
     - **Box-Cox:** Only positive values.
@@ -247,7 +258,6 @@
       from scipy.stats import boxcox
       df['Salaries_boxcox'], lam = boxcox(df['Salaries'] + 1)
       ```
-
     - **Yeo-Johnson:** Works for zero and negative values.
 
       ```
@@ -258,9 +268,7 @@
       from scipy.stats import yeojohnson
       df['Salaries_yeo'], lam = yeojohnson(df['Salaries'])
       ```
-
     - **How to identify (Plot):** **QQ-plot** (`scipy.stats.probplot`) for normality check before/after.
-
   - **Quantile Transformation:** Make distribution uniform or normal using quantiles.
 
     ```python
